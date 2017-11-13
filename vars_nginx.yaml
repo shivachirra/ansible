@@ -1,0 +1,52 @@
+nginx_official_repo: True
+keep_only_specified: True
+
+vdomain: myfirstpage.com
+vdomain1: mysecondpage.com
+vdomain1: mythirdpage.com
+
+nginx_sites:
+  www.myfirstpage.com:
+    - listen *:80
+    - server_name www.{{ vdomain }}
+    - listen *:80
+    - server_name {{ vdomain }}
+    - index index.html index.htm index.php
+    - access_log /var/log/nginx/{{ vdomain }}.access.log combined
+    - error_log /var/log/nginx/{{ vdomain }}.error.log
+    - root /srv/www/{{ vdomain }}/
+    - location /1.html {
+            stub_status on;
+            access_log false;
+            allow 127.0.0.1;
+  www.mysecondpage.com:
+    - listen *:80
+    - server_name www.{{ vdomain1 }}
+    - listen *:80
+    - server_name {{ vdomain1 }}
+    - index index.html index.htm index.php
+    - access_log /var/log/nginx/{{ vdomain1 }}.access.log combined
+    - error_log /var/log/nginx/{{ vdomain1 }}.error.log
+    - root /srv/www/{{ vdomain1 }}/
+    - location /2.html {
+            stub_status on;
+            access_log false;
+            allow 127.0.0.1;
+
+  www.mythirdpage.com:
+    - listen *:80
+    - server_name www.{{ vdomain2 }}
+    - listen *:80
+    - server_name {{ vdomain2 }}
+    - index index.html index.htm index.php
+    - access_log /var/log/nginx/{{ vdomain2 }}.access.log combined
+    - error_log /var/log/nginx/{{ vdomain2 }}.error.log
+    - root /srv/www/{{ vdomain2 }}/
+    - location /3.html {
+            stub_status on;
+            access_log false;
+            allow 127.0.0.1;
+
+nginx_configs:
+  upstream:
+    - upstream php { server unix:/var/run/php5-fpm.sock fail_timeout=10s; }
